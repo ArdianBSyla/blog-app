@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/personal/blog-app/config"
+
+	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -54,4 +56,13 @@ func NewDBConnection(conf *config.Config) (*sql.DB, error) {
 		conf.DB_Port,
 		conf.DB_Name,
 	))
+}
+
+func ViolatesForeignKeyError(err error) bool {
+	if err != nil {
+		pgErr, ok := err.(*pq.Error)
+		return ok && string(pgErr.Code) == "23503"
+	}
+
+	return false
 }

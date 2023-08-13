@@ -5,8 +5,11 @@ import (
 	"log"
 
 	"github.com/personal/blog-app/app"
+	"github.com/personal/blog-app/app/controller"
 	"github.com/personal/blog-app/app/helper"
+	"github.com/personal/blog-app/app/service"
 	"github.com/personal/blog-app/config"
+
 	"go.uber.org/dig"
 )
 
@@ -23,6 +26,13 @@ func container() *dig.Container {
 	container.Provide(config.NewConfig)
 	container.Provide(app.NewChiRouter)
 	container.Provide(helper.NewGormDB)
+
+	// controllers
+	container.Provide(controller.NewBlogPostController, dig.Group("controller"))
+
+	// services
+	container.Provide(service.NewBlogPostService)
+	container.Provide(service.NewPostCommentService)
 
 	return container
 }
