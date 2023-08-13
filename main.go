@@ -29,6 +29,7 @@ func container() *dig.Container {
 
 	// controllers
 	container.Provide(controller.NewBlogPostController, dig.Group("controller"))
+	container.Provide(controller.NewPostCommentController, dig.Group("controller"))
 
 	// services
 	container.Provide(service.NewBlogPostService)
