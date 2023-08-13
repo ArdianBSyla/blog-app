@@ -10,7 +10,12 @@ type BlogPost struct {
 }
 
 type BlogPostToCreate struct {
-	Title   string `json:"title" validate:"required"`
-	Content string `json:"content" validate:"required"`
-	Author  string `json:"author" validate:"required"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
+	Author  string `json:"author"`
+}
+
+type UpdateBlogPost struct {
+	Title   *string `json:"title"`
+	Content *string `json:"content"`
 }
