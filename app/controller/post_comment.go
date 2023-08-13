@@ -31,6 +31,9 @@ func (c *PostCommentController) Register(r app.Router) {
 			r.With(middleware.JSONHeader()).
 				Delete("/{commentID:[1-9][0-9]*}", c.DeletePostComment)
 
+			r.With(middleware.JSONHeader()).
+				Get("/stats", c.GetDeletedCommentsStats)
+
 		})
 }
 
@@ -82,4 +85,20 @@ func (c *PostCommentController) DeletePostComment(writer http.ResponseWriter, re
 	}
 
 	writer.WriteHeader(http.StatusOK)
+}
+
+func (c *PostCommentController) GetDeletedCommentsStats(writer http.ResponseWriter, request *http.Request) {
+	ctx, cancel := context.WithTimeout(request.Context(), time.Duration(5000000000))
+	defer cancel()
+
+	stats, err := c.postCommentService.GetDeletedCommentsStats(ctx)
+	if err != nil {
+		http.Error(writer, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	writer.WriteHeader(http.StatusCreated)
+	responseJSON, _ := json.Marshal(stats)
+
+	writer.Write(responseJSON)
 }
