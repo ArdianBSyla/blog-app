@@ -12,6 +12,7 @@ import (
 type PostCommentService interface {
 	CreatePostComment(ctx context.Context, createComment *dto.PostCommentToCreate) (*dto.PostComment, error)
 	DeletePostComment(ctx context.Context, commentID int) error
+	GetDeletedCommentsStats(ctx context.Context) (*dto.DeletedCommentsStats, error)
 }
 
 type postCommentService struct {
@@ -69,4 +70,18 @@ func (s *postCommentService) DeletePostComment(ctx context.Context, commentID in
 	}
 
 	return nil
+}
+
+func (s *postCommentService) GetDeletedCommentsStats(ctx context.Context) (*dto.DeletedCommentsStats, error) {
+	var stats dto.DeletedCommentsStats
+
+	result := s.orm.Model(&model.PostComment{}).
+		Select("SUM(CASE WHEN is_deleted THEN 1 ELSE 0 END) as deleted_count, COUNT(*) as total_count").
+		Scan(&stats)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &stats, nil
 }

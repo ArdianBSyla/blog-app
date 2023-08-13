@@ -15,3 +15,8 @@ type PostCommentToCreate struct {
 	Content string `json:"content"`
 	Author  string `json:"author"`
 }
+
+type DeletedCommentsStats struct {
+	DeletedCount int `json:"deleted_count"`
+	TotalCount   int `json:"total_count"`
+}
