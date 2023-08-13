@@ -3,6 +3,8 @@ package controller
 import (
 	"net/http"
 	"strconv"
+
+	"github.com/go-chi/chi"
 )
 
 func queryParamInt(request *http.Request, name string, defaultValue int) (int, error) {
@@ -17,4 +19,16 @@ func queryParamInt(request *http.Request, name string, defaultValue int) (int, e
 	}
 
 	return parsedVal, nil
+}
+
+// URLParam returns the url parameter as a string
+// from a http.Request object.
+func URLParam(r *http.Request, key string) string {
+	return chi.URLParam(r, key)
+}
+
+// URLParamInt returns the url parameter as an integer
+// from a http.Request object.
+func URLParamInt(r *http.Request, key string) (int, error) {
+	return strconv.Atoi(URLParam(r, key))
 }
